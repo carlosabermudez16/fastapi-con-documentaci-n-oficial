@@ -1,0 +1,74 @@
+[project]
+name = "prueba-uno"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "alembic>=1.18.4",
+    "argon2-cffi>=25.1.0",
+    "cryptography>=46.0.5",
+    "email-validator>=2.3.0",
+    "fastapi[standard]>=0.129.0",
+    "fastapi-utils>=0.8.0",
+    "httpx>=0.28.1",
+    "jinja2>=3.1.6",
+    "pwdlib>=0.3.0",
+    "pydantic-settings>=2.13.0",
+    "pydantic[email]>=2.12.5",
+    "pyjwt>=2.11.0",
+    "pymysql>=1.1.2",
+    "pytest>=9.0.2",
+    "python-dotenv>=1.2.1",
+    "python-multipart>=0.0.22",
+    "sentry-sdk>=2.53.0",
+    "sqlmodel>=0.0.33",
+    "typing-inspect>=0.9.0",
+    "uvicorn>=0.40.0",
+]
+
+[dependency-groups]
+dev = [
+    "black>=26.1.0",
+    "isort>=7.0.0",
+    "pre-commit>=4.5.1",
+    "ruff>=0.15.1",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+src_paths = ["src"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+src = ["src"]
+exclude = ["alembic"]
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle
+    "F",  # pyflakes
+    "I",  # import sorting
+    "UP", # pyupgrade
+    "B",  # bugbear
+]
+ignore = [
+    "E501",  # black handles line length
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+asyncio_mode = "auto"
