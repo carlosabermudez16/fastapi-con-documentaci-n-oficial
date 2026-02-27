@@ -1,7 +1,7 @@
 import time
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request, status  # ,Depends
+from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -22,13 +22,11 @@ from app.routes.v2 import items
 from app.routes.v3 import items3
 from app.routes.v4 import forms, images
 from app.routes.v5 import examples_depends
-
-# from app.tasks.use_depends import verify_token, verify_key
 from app.routes.v6 import example_security, login_jwt
 from app.routes.v7 import example_database
 from app.routes.v8 import send_email
 from app.routes.v9 import example_response_status_code
-from app.routes.v10 import websocket
+from app.routes.v10 import example_auth0_jwt, websocket
 
 
 @asynccontextmanager
@@ -102,18 +100,23 @@ async def decode_token_error_handler(request: Request, exc: TokenDecodeError):
     )
 
 
-app.include_router(auth_routes.router)
-app.include_router(items.router)
-app.include_router(items3.router)
-app.include_router(forms.router)
-app.include_router(images.router)
-app.include_router(examples_depends.router)
-app.include_router(example_security.router)
-app.include_router(login_jwt.router)
-app.include_router(example_database.router)
-app.include_router(send_email.router)
-app.include_router(example_response_status_code.router)
-app.include_router(websocket.router)
+routers: list = [
+    auth_routes.router,
+    items.router,
+    items3.router,
+    forms.router,
+    images.router,
+    examples_depends.router,
+    example_security.router,
+    login_jwt.router,
+    example_database.router,
+    send_email.router,
+    example_response_status_code.router,
+    websocket.router,
+    example_auth0_jwt.router,
+]
+for router in routers:
+    app.include_router(router)
 
 app.middleware("http")(logging_middleware)
 

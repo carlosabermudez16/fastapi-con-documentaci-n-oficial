@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     TEST_DATABASE_URL: str
     SLACK_WEBHOOK_URL: str | None = None
+    AUTH0_DOMAIN: str | None = None
+    AUTH0_AUDIENCE: str | None = None
 
     model_config = SettingsConfigDict(
         env_file=".env",
