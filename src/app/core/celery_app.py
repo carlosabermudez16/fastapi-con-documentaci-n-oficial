@@ -15,7 +15,7 @@ celery_app.conf.update(
     accept_content=["json"],
     timezone="UTC",
     enable_utc=True,
-    task_routes={"tasks.task_status_code.*": {"queue": "celery"}},
+    # task_routes={"tasks.task_status_code.*": {"queue": "celery"}},
 )
 
-celery_app.autodiscover_tasks(["app.tasks"])
+# celery_app.autodiscover_tasks(["app.tasks"])
