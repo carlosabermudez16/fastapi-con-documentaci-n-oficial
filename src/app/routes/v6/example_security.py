@@ -1,5 +1,6 @@
 from typing import Annotated
 
+import bcrypt
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
@@ -23,7 +24,15 @@ async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]
 
 
 def fake_hash_password(password: str):
-    return "fakehashed" + password
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
+    return hashed.decode("utf-8")
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return bcrypt.checkpw(
+        plain_password.encode("utf-8"), hashed_password.encode("utf-8")
+    )
 
 
 fake_users_db = {
@@ -31,14 +40,14 @@ fake_users_db = {
         "username": "johndoe",
         "full_name": "John Doe",
         "email": "johndoe@example.com",
-        "hashed_password": "fakehashedsecret",
+        "hashed_password": fake_hash_password("johndoe1"),
         "disabled": False,
     },
     "alice": {
         "username": "alice",
         "full_name": "Alice Wonderson",
         "email": "alice@example.com",
-        "hashed_password": "fakehashedsecret2",
+        "hashed_password": fake_hash_password("alice2"),
         "disabled": True,
     },
 }
@@ -79,7 +88,7 @@ async def get_current_active_user(
     return current_user
 
 
-@router.post("/token")
+@router.post("/password_login")
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     user_dict = fake_users_db.get(form_data.username)
     if not user_dict:
@@ -88,11 +97,10 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
             detail="Incorrect username or password",
         )
     user = UserInDB(**user_dict)
-    hashed_password = fake_hash_password(form_data.password)
-    if not hashed_password == user.hashed_password:
+    if not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect username or password",
+            detail="Incorrect password",
         )
 
     return {
