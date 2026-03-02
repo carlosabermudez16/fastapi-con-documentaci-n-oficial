@@ -32,7 +32,7 @@ async def get_result(task_id: str):
     task = collect_results.AsyncResult(task_id)
     if task.state == "PENDING":
         return {"status": "Task is still in progress", "state": task.state}
-    elif task.state != "FAILURE":
+    elif task.state != "FAILURE":  # task.ready()
         return task.result
-    else:
+    else:  # task.failed()
         return {"status": "Task Failed", "state": task.state, "error": str(task.info)}
