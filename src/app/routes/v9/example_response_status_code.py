@@ -55,3 +55,7 @@ def get_or_create_task(task_id: str, response: Response):
 def create_cookie(response: Response):
     response.set_cookie(key="fakesession", value="fake-cookie-session-value")
     return {"message": "Come to the dark side, we have cookies"}
+    # return JSONResponse(content={"message":"WELCOME"}, headers={"set-cookie":"fakesession=fake-cookie-session-value"})
+    # response = JSONResponse(content={"message":"WELCOME"})
+    # response.set_cookie(key="fakesession", value="fake-cookie-session-value")
+    # return response
