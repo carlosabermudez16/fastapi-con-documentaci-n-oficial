@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     TEST_DATABASE_URL: str
     SLACK_WEBHOOK_URL: str | None = None
+    CELERY_BROKER_URL: str | None = None
+    CELERY_RESULT_BACKEND: str | None = None
 
     model_config = SettingsConfigDict(
         env_file=".env",

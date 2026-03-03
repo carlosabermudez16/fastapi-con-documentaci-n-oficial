@@ -29,6 +29,7 @@ from app.routes.v7 import example_database
 from app.routes.v8 import send_email
 from app.routes.v9 import example_response_status_code
 from app.routes.v10 import websocket
+from app.routes.v11 import example_celery
 
 
 @asynccontextmanager
@@ -102,18 +103,25 @@ async def decode_token_error_handler(request: Request, exc: TokenDecodeError):
     )
 
 
-app.include_router(auth_routes.router)
-app.include_router(items.router)
-app.include_router(items3.router)
-app.include_router(forms.router)
-app.include_router(images.router)
-app.include_router(examples_depends.router)
-app.include_router(example_security.router)
-app.include_router(login_jwt.router)
-app.include_router(example_database.router)
-app.include_router(send_email.router)
-app.include_router(example_response_status_code.router)
-app.include_router(websocket.router)
+routers: list = [
+    auth_routes.router,
+    items.router,
+    items3.router,
+    forms.router,
+    images.router,
+    examples_depends.router,
+    example_security.router,
+    login_jwt.router,
+    example_database.router,
+    send_email.router,
+    example_response_status_code.router,
+    websocket.router,
+    example_celery.router,
+]
+
+for router in routers:
+    app.include_router(router)
+
 
 app.middleware("http")(logging_middleware)
 
