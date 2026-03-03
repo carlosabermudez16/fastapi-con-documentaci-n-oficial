@@ -27,6 +27,8 @@ from app.routes.v5 import examples_depends
 from app.routes.v6 import example_security, login_jwt
 from app.routes.v7 import example_database
 from app.routes.v8 import send_email
+from app.routes.v9 import example_response_status_code
+from app.routes.v10 import websocket
 
 
 @asynccontextmanager
@@ -110,6 +112,8 @@ app.include_router(example_security.router)
 app.include_router(login_jwt.router)
 app.include_router(example_database.router)
 app.include_router(send_email.router)
+app.include_router(example_response_status_code.router)
+app.include_router(websocket.router)
 
 app.middleware("http")(logging_middleware)
 
