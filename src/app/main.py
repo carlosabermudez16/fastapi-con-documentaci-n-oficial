@@ -1,7 +1,7 @@
 import time
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request, status  # ,Depends
+from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -22,8 +22,6 @@ from app.routes.v2 import items
 from app.routes.v3 import items3
 from app.routes.v4 import forms, images
 from app.routes.v5 import examples_depends
-
-# from app.tasks.use_depends import verify_token, verify_key
 from app.routes.v6 import example_security, login_jwt
 from app.routes.v7 import example_database
 from app.routes.v8 import send_email
