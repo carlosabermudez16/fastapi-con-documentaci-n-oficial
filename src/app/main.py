@@ -23,7 +23,7 @@ from app.routes.v3 import items3
 from app.routes.v4 import forms, images
 from app.routes.v5 import examples_depends
 from app.routes.v6 import example_security, login_jwt
-from app.routes.v7 import example_database
+from app.routes.v7 import example_database, team
 from app.routes.v8 import send_email
 from app.routes.v9 import example_response_status_code
 from app.routes.v10 import websocket
@@ -115,6 +115,7 @@ routers: list = [
     example_response_status_code.router,
     websocket.router,
     example_celery.router,
+    team.router,
 ]
 
 for router in routers:

@@ -1,4 +1,6 @@
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
+
+from app.models.team import Team
 
 
 class BaseModel(SQLModel):
@@ -12,4 +14,11 @@ class HeroBase(SQLModel):
 
 class Hero(HeroBase, BaseModel, table=True):
     secret_name: str
-    active: bool = True
+    active: bool | None = True
+    is_deleted: bool | None = False
+    team_id: int | None = Field(
+        default=None, foreign_key="team.id", ondelete="SET NULL"
+    )
+
+    # Relations
+    team: Team | None = Relationship(back_populates="heroes")

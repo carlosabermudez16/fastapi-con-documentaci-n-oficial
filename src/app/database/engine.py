@@ -3,8 +3,6 @@ from sqlmodel import create_engine
 
 from app.core.config import settings
 
-# sqlite_file_name = "database.db"
-# sqlite_url = f"sqlite:///src/app/database/{sqlite_file_name}"
 db_url = settings.DATABASE_URL
 connect_args = {"check_same_thread": False}
 is_sqlite = db_url.startswith("sqlite")

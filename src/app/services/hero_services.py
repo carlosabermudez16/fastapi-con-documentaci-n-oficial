@@ -5,6 +5,7 @@ from app.repositories.hero_repository import (
     delete_hero,
     get_hero_by_id,
     get_heroes,
+    get_heroes_by_team,
     update_hero,
 )
 from app.schemas.v6.hero import HeroUpdate
@@ -28,6 +29,20 @@ def read_heroes_service(
     return get_heroes(
         model_type=model_type, session=session, offset=offset, limit=limit
     )
+
+
+def read_heroes_by_team_service(
+    model_type: SQLModel,
+    team_model: SQLModel,
+    session: Session,
+    team_id: int,
+):
+    heroes_team = get_heroes_by_team(
+        model_type=model_type, team_model=team_model, session=session, team_id=team_id
+    )
+    return heroes_team
+    # heroes = [hero[0] for hero in heroes_team]
+    # return heroes
 
 
 def update_hero_service(

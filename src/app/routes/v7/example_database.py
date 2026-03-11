@@ -3,11 +3,14 @@ from typing import Annotated
 from fastapi import APIRouter, Query, status
 
 from app.models.hero import Hero
+from app.models.team import Team
 from app.repositories.hero_repository import create_hero
 from app.routes.deps import SessionDep
-from app.schemas.v6.hero import HeroCreate, HeroPublic, HeroUpdate
+from app.schemas.v6.hero import HeroCreate, HeroUpdate, HeroWithTeamScheme
+from app.schemas.v6.shared_schemas import HeroPublic
 from app.services.hero_services import (
     delete_hero_service,
+    read_heroes_by_team_service,
     read_heroes_service,
     read_single_hero_service,
     update_hero_service,
@@ -35,7 +38,9 @@ async def read_heroes(
 
 
 @router.get(
-    "/heroes/{hero_id}", response_model=HeroPublic, status_code=status.HTTP_200_OK
+    "/heroes/{hero_id}",
+    response_model=HeroWithTeamScheme,
+    status_code=status.HTTP_200_OK,
 )
 async def read_single_hero(
     hero_id: int,
@@ -43,6 +48,22 @@ async def read_single_hero(
 ):
     hero = read_single_hero_service(model_type=Hero, session=session, hero_id=hero_id)
     return hero
+
+
+@router.get(
+    "/team/heroes/{team_id}",
+    response_model=list[HeroPublic],
+    status_code=status.HTTP_200_OK,
+)
+async def read_heroes_by_team(
+    team_id: int,
+    session: SessionDep,
+):
+    heroes = read_heroes_by_team_service(
+        model_type=Hero, team_model=Team, session=session, team_id=team_id
+    )
+
+    return heroes
 
 
 @router.put(
