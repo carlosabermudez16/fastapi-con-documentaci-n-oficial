@@ -6,12 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.core.config import settings
-from app.core.exceptions import (
-    HeroNotFoundError,
-    PersistenceError,
-    TokenCreationError,
-    TokenDecodeError,
-)
+from app.core.exceptions import AppException
 from app.core.logger import logger
 from app.core.security import development_environment
 from app.database.engine import engine
@@ -23,7 +18,7 @@ from app.routes.v3 import items3
 from app.routes.v4 import forms, images
 from app.routes.v5 import examples_depends
 from app.routes.v6 import example_security, login_jwt
-from app.routes.v7 import example_database, team
+from app.routes.v7 import example_database, example_relationship_nxn, team
 from app.routes.v8 import send_email
 from app.routes.v9 import example_response_status_code
 from app.routes.v10 import websocket
@@ -65,39 +60,28 @@ app.add_middleware(
 )
 
 
-@app.exception_handler(HeroNotFoundError)
-async def hero_not_found_handler(request: Request, exc: HeroNotFoundError):
-    return JSONResponse(
-        status_code=status.HTTP_404_NOT_FOUND, content={"detail": "register not found"}
-    )
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    # logger.exception(
+    #    f"Unhandled error on {request.method} {request.url}"
+    # )
 
-
-@app.exception_handler(PersistenceError)
-async def persistence_exception_handler(request: Request, exc: PersistenceError):
-    logger.error(f"Error on {request.method} {request.url} -> {exc}")
-    # logging.Logger.exception(f"DB Error on {request.method} {request.url}")
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content={"detail": "operation failed"},
+        content={"detail": "internal server error"},
     )
 
 
-@app.exception_handler(TokenCreationError)
-async def token_error_handler(request: Request, exc: TokenCreationError):
-    logger.error(msg=f"Error on {request.method} {request.url} -> {exc}")
-    return JSONResponse(
-        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content={"detail": "Authentication system error"},
-    )
+@app.exception_handler(AppException)
+async def app_exception_handler(request: Request, exc: AppException):
+    if exc.status_code != status.HTTP_404_NOT_FOUND:
+        logger.exception(
+            f"Application error on {request.method} {request.url} -> {exc}"
+        )
 
-
-@app.exception_handler(TokenDecodeError)
-async def decode_token_error_handler(request: Request, exc: TokenDecodeError):
-    logger.error(msg=f"Error on {request.method} {request.url} -> {exc}")
     return JSONResponse(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        content={"detail": "Could not validate credentials"},
-        headers={"WWW.Authenticate": "Bearer"},
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
     )
 
 
@@ -116,6 +100,7 @@ routers: list = [
     websocket.router,
     example_celery.router,
     team.router,
+    example_relationship_nxn.router,
 ]
 
 for router in routers:
