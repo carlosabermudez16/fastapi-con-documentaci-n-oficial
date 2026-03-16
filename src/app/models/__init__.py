@@ -1,3 +1,4 @@
+from .book import BookModel  # noqa: F401
 from .emoji import Emoji  # noqa: F401
 from .event import Event  # noqa: F401
 from .event_emoji import EventEmoji  # noqa: F401
