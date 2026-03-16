@@ -52,7 +52,9 @@ def update_hero_service(
         model_type=model_type, session=session, hero_id=hero_id
     )
 
-    hero_data = hero_update.model_dump(exclude_unset=True)
+    hero_data = hero_update.model_dump(
+        exclude_unset=True
+    )  # exclude_unset -> solo inluirá los valores enviados
     hero__update_db = update_hero(
         model_type=hero_db, hero_data=hero_data, session=session
     )

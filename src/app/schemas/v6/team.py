@@ -12,5 +12,5 @@ class TeamWithHeroesScheme(BaseModel):
     headquarters: str
     heroes: list[HeroPublic] = []
 
-    class Config:
+    class ConfigDict:
         from_attributes = True

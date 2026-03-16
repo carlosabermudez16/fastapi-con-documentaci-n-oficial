@@ -7,5 +7,5 @@ class EventEmojiScheme(BaseModel):
     is_training: bool
     emoji: EmojiScheme
 
-    class Config:
+    class ConfigDict:
         from_attributes = True

@@ -5,7 +5,7 @@ from app.schemas.v6.event_emoji import EventEmojiScheme
 class EventScheme(EventBase):
     id: int
 
-    class Config:
+    class ConfigDict:
         from_attributes = True
 
 

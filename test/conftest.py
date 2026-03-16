@@ -16,7 +16,7 @@ engine = create_engine(
 )
 
 
-# 🔁 Override dependencia (equivalente a create_app(TestingConfig))
+# 🔁 esta dependencia es utilizada por todas las operaciones de ruta para obtener el objeto de sesión
 def override_get_session():
     with Session(engine) as session:
         yield session
@@ -39,4 +39,4 @@ def init_database():
 
     yield
 
-    SQLModel.metadata.drop_all(engine)
+    # SQLModel.metadata.drop_all(engine)
