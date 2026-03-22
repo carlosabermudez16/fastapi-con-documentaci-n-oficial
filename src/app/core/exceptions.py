@@ -55,3 +55,8 @@ class RegisterNotFoundError(AppException):
 class DuplicateRegisterError(AppException):
     status_code = status.HTTP_409_CONFLICT
     detail = "Email already registered"
+
+
+class AccountNotVerified(AppException):
+    status_code = status.HTTP_403_FORBIDDEN
+    detail = "Account Not Verified: Please check your email for verification details"

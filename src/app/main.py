@@ -23,6 +23,7 @@ from app.routes.v8 import send_email
 from app.routes.v9 import example_response_status_code
 from app.routes.v10 import websocket
 from app.routes.v11 import example_celery
+from app.routes.v12 import emails, user
 
 
 @asynccontextmanager
@@ -101,6 +102,8 @@ routers: list = [
     example_celery.router,
     team.router,
     example_relationship_nxn.router,
+    emails.router,
+    user.router,
 ]
 
 for router in routers:
